@@ -311,8 +311,27 @@ bool AtlasTexture::is_pixel_opaque(int p_x, int p_y) const {
 		return true;
 	}
 
-	int x = p_x + region.position.x - margin.position.x;
-	int y = p_y + region.position.y - margin.position.y;
+	int x = region.position.x - margin.position.x;
+	int y = region.position.y - margin.position.y;
+
+	switch (direction) {
+		case NORTH:
+			x += p_x;
+			y += p_y;
+			break;
+		case EAST:
+			x += region.size.x - p_y;
+			y += p_x;
+			break;
+		case WEST:
+			x += p_y;
+			y += region.size.y - p_x;
+			break;
+		case SOUTH:
+			x += region.size.x - p_x;
+			y += region.size.y - p_y;
+			break;
+	}
 
 	// Margin edge may outside of atlas.
 	if (x < 0 || x >= atlas->get_width()) {
